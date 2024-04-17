@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>StartWindow</class>
+ <widget class="QMainWindow" name="StartWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>856</width>
+    <height>535</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>StartWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="signUpButton">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>360</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>7</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: transparent;
+color: white;
+</string>
+    </property>
+    <property name="text">
+     <string>Not a user? Sign up!</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="usernameLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>240</y>
+      <width>241</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: white;
+border: 2px solid gray;
+border-radius: 10px;
+padding: 0 5px;</string>
+    </property>
+    <property name="inputMask">
+     <string/>
+    </property>
+    <property name="placeholderText">
+     <string>USERNAME</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="backgroundLabel">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>861</width>
+      <height>541</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">button-&gt;setStyleSheet(
+    &quot;QPushButton {&quot;
+    &quot;   background-color: white;&quot;
+    &quot;   color: black;&quot;
+    &quot;   border-radius: 10px;&quot;
+    &quot;   border: none;&quot;
+    &quot;   padding: 10px;&quot;
+    &quot;}&quot;
+    &quot;QPushButton:hover {&quot;
+    &quot;   background-color: rgba(255, 255, 255, 0.9);&quot;
+    &quot;}&quot;
+    &quot;QPushButton:pressed {&quot;
+    &quot;   background-color: rgba(255, 255, 255, 0.8);&quot; // Lekkie przyciemnienie po naciśnięciu
+    &quot;}&quot;
+);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="Resources.qrc">:/Resources/logInBackground.jpg</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="logInButton">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>320</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Calibri</family>
+      <pointsize>16</pointsize>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">button-&gt;setStyleSheet(
+    &quot;QPushButton {&quot;
+    &quot;   background-color: white;&quot;
+    &quot;   color: black;&quot;
+    &quot;   border-radius: 10px;&quot;
+    &quot;   border: none;&quot;
+    &quot;   padding: 10px;&quot;
+    &quot;}&quot;
+    &quot;QPushButton:hover {&quot;
+    &quot;   background-color: rgba(255, 255, 255, 0.9);&quot;
+    &quot;}&quot;
+    &quot;QPushButton:pressed {&quot;
+    &quot;   background-color: rgba(255, 255, 255, 0.8);&quot; // Lekkie przyciemnienie po naciśnięciu
+    &quot;}&quot;
+);</string>
+    </property>
+    <property name="text">
+     <string>Login</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="blackLabel">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>140</y>
+      <width>451</width>
+      <height>251</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: #0d0c0c;
+border-radius: 40px;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="titleLabel">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>160</y>
+      <width>211</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>19</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: white</string>
+    </property>
+    <property name="text">
+     <string>HOME MANAGEMENT</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="passwordLineEdit">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>280</y>
+      <width>241</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: white;
+border: 2px solid gray;
+border-radius: 10px;
+padding: 0 5px;</string>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
+    </property>
+    <property name="placeholderText">
+     <string>PASSWORD</string>
+    </property>
+   </widget>
+   <zorder>backgroundLabel</zorder>
+   <zorder>blackLabel</zorder>
+   <zorder>titleLabel</zorder>
+   <zorder>passwordLineEdit</zorder>
+   <zorder>logInButton</zorder>
+   <zorder>signUpButton</zorder>
+   <zorder>usernameLineEdit</zorder>
+  </widget>
+ </widget>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

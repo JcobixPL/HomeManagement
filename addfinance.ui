@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>addFinance</class>
+ <widget class="QDialog" name="addFinance">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>428</width>
+    <height>567</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>-10</x>
+     <y>-20</y>
+     <width>451</width>
+     <height>631</height>
+    </rect>
+   </property>
+   <widget class="QWidget" name="addFinancePage">
+    <widget class="QLabel" name="addFinanceLabel">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>130</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+       <pointsize>14</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>ADD NEW FINANCE</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="dateLabel">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>350</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>DATE</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="titleLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>320</y>
+       <width>141</width>
+       <height>24</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="categoryLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>400</y>
+       <width>141</width>
+       <height>24</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="confirmButton">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>470</y>
+       <width>80</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Confirm</string>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="amountSpinBox">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>280</y>
+       <width>141</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <double>100000000000.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QLabel" name="backgroundLabel">
+     <property name="geometry">
+      <rect>
+       <x>-160</x>
+       <y>10</y>
+       <width>1061</width>
+       <height>591</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Resources.qrc">:/Resources/logInBackground.jpg</pixmap>
+     </property>
+    </widget>
+    <widget class="QLabel" name="categoryLabel">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>390</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>CATEGORY</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="amountLabel">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>270</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>AMOUNT</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="typeLabel">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>230</y>
+       <width>151</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>TYPE</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="typeComboBox">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>240</y>
+       <width>141</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>Income</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Expense</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QDateEdit" name="dateEdit">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>360</y>
+       <width>141</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="calendarPopup">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="titleLabel">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>310</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>TITLE</string>
+     </property>
+    </widget>
+    <zorder>backgroundLabel</zorder>
+    <zorder>categoryLabel</zorder>
+    <zorder>amountLabel</zorder>
+    <zorder>typeLabel</zorder>
+    <zorder>typeComboBox</zorder>
+    <zorder>dateEdit</zorder>
+    <zorder>titleLabel</zorder>
+    <zorder>addFinanceLabel</zorder>
+    <zorder>dateLabel</zorder>
+    <zorder>amountSpinBox</zorder>
+    <zorder>categoryLineEdit</zorder>
+    <zorder>confirmButton</zorder>
+    <zorder>titleLineEdit</zorder>
+   </widget>
+   <widget class="QWidget" name="editFinancePage">
+    <widget class="QLabel" name="categoryLabel_3">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>390</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>CATEGORY</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="addFinanceLabel_3">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>130</y>
+       <width>111</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+       <pointsize>14</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>EDIT FINANCE</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="typeComboBox_3">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>240</y>
+       <width>141</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>Income</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Expense</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="typeLabel_3">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>230</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>TYPE</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="dateLabel_3">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>350</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>DATE</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="titleLabel_3">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>310</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>TITLE</string>
+     </property>
+    </widget>
+    <widget class="QDateEdit" name="dateEdit_2">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>360</y>
+       <width>141</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="minimumDate">
+      <date>
+       <year>1752</year>
+       <month>9</month>
+       <day>14</day>
+      </date>
+     </property>
+     <property name="calendarPopup">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="titleLineEdit_3">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>320</y>
+       <width>141</width>
+       <height>24</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="backgroundLabel_3">
+     <property name="geometry">
+      <rect>
+       <x>-160</x>
+       <y>10</y>
+       <width>1061</width>
+       <height>591</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="Resources.qrc">:/Resources/logInBackground.jpg</pixmap>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="amountSpinBox_3">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>280</y>
+       <width>141</width>
+       <height>25</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <double>100000000000.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="categoryLineEdit_3">
+     <property name="geometry">
+      <rect>
+       <x>250</x>
+       <y>400</y>
+       <width>141</width>
+       <height>24</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="amountLabel_3">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>270</y>
+       <width>171</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color:white;</string>
+     </property>
+     <property name="text">
+      <string>AMOUNT</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="confirmButton_3">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>470</y>
+       <width>80</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Confirm</string>
+     </property>
+    </widget>
+    <zorder>backgroundLabel_3</zorder>
+    <zorder>amountLabel_3</zorder>
+    <zorder>categoryLabel_3</zorder>
+    <zorder>addFinanceLabel_3</zorder>
+    <zorder>categoryLineEdit_3</zorder>
+    <zorder>titleLabel_3</zorder>
+    <zorder>typeLabel_3</zorder>
+    <zorder>amountSpinBox_3</zorder>
+    <zorder>dateLabel_3</zorder>
+    <zorder>dateEdit_2</zorder>
+    <zorder>titleLineEdit_3</zorder>
+    <zorder>typeComboBox_3</zorder>
+    <zorder>confirmButton_3</zorder>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

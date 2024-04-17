@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/account.png</file>
+        <file>Resources/bigaccount.png</file>
+        <file>Resources/black.png</file>
+        <file>Resources/dashboard.png</file>
+        <file>Resources/finances.png</file>
+        <file>Resources/icon.ico</file>
+        <file>Resources/icon.jpg</file>
+        <file>Resources/icon1.png</file>
+        <file>Resources/logInBackground.jpg</file>
+        <file>Resources/quit.png</file>
+        <file>Resources/tasks.png</file>
+    </qresource>
+</RCC>
