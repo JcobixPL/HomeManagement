@@ -474,9 +474,9 @@ padding-left: 10px;</string>
     <widget class="QLabel" name="todayTasksLabel">
      <property name="geometry">
       <rect>
-       <x>830</x>
+       <x>810</x>
        <y>120</y>
-       <width>151</width>
+       <width>181</width>
        <height>41</height>
       </rect>
      </property>
@@ -562,7 +562,7 @@ padding-left: 10px;</string>
       <rect>
        <x>600</x>
        <y>110</y>
-       <width>111</width>
+       <width>141</width>
        <height>16</height>
       </rect>
      </property>
@@ -608,6 +608,29 @@ padding-left: 10px;</string>
       <string/>
      </property>
     </widget>
+    <widget class="QLabel" name="monthBalanceLabel_3">
+     <property name="geometry">
+      <rect>
+       <x>780</x>
+       <y>400</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Calibri</family>
+       <pointsize>17</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>MONTH BALANCE</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
     <zorder>welcomeBckLabel</zorder>
     <zorder>menuLabel</zorder>
     <zorder>emailLabel</zorder>
@@ -633,6 +656,7 @@ padding-left: 10px;</string>
     <zorder>monthExpenses</zorder>
     <zorder>monthBalanceLabel</zorder>
     <zorder>balanceLabel</zorder>
+    <zorder>monthBalanceLabel_3</zorder>
    </widget>
    <widget class="QWidget" name="financesPage">
     <widget class="QLabel" name="emailLabel_2">
@@ -1437,7 +1461,7 @@ padding-left: 10px;</string>
      <property name="geometry">
       <rect>
        <x>700</x>
-       <y>550</y>
+       <y>610</y>
        <width>80</width>
        <height>24</height>
       </rect>
@@ -1450,7 +1474,7 @@ padding-left: 10px;</string>
      <property name="geometry">
       <rect>
        <x>790</x>
-       <y>550</y>
+       <y>610</y>
        <width>80</width>
        <height>24</height>
       </rect>
@@ -1463,7 +1487,7 @@ padding-left: 10px;</string>
      <property name="geometry">
       <rect>
        <x>880</x>
-       <y>550</y>
+       <y>610</y>
        <width>80</width>
        <height>24</height>
       </rect>
@@ -1475,9 +1499,9 @@ padding-left: 10px;</string>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>740</x>
+       <x>650</x>
        <y>100</y>
-       <width>49</width>
+       <width>91</width>
        <height>16</height>
       </rect>
      </property>
@@ -1710,6 +1734,32 @@ padding-left: 10px;</string>
       <string>Choosen task:</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="makeAsDoneButton">
+     <property name="geometry">
+      <rect>
+       <x>660</x>
+       <y>560</y>
+       <width>161</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>MAKE AS DONE</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="makeAsUndoneButton">
+     <property name="geometry">
+      <rect>
+       <x>840</x>
+       <y>560</y>
+       <width>161</width>
+       <height>24</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>MAKE AS UNDONE</string>
+     </property>
+    </widget>
     <zorder>welcomeBckLabel_2</zorder>
     <zorder>menuLabel_3</zorder>
     <zorder>financesButton_3</zorder>
@@ -1732,6 +1782,8 @@ padding-left: 10px;</string>
     <zorder>verticalLayoutWidget_3</zorder>
     <zorder>dateLabel_4</zorder>
     <zorder>label</zorder>
+    <zorder>makeAsDoneButton</zorder>
+    <zorder>makeAsUndoneButton</zorder>
    </widget>
    <widget class="QWidget" name="accountPage">
     <widget class="QLabel" name="emailLabel_4">

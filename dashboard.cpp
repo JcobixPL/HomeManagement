@@ -268,6 +268,7 @@ void Dashboard::updateTable() {
     model->setHeaderData(model->fieldIndex("type"), Qt::Horizontal, tr("Type"));
     model->setHeaderData(model->fieldIndex("title"), Qt::Horizontal, tr("Title"));
     model->setHeaderData(model->fieldIndex("amount"), Qt::Horizontal, tr("Amount"));
+    model->setHeaderData(model->fieldIndex("category"), Qt::Horizontal, tr("Category"));
     model->setHeaderData(model->fieldIndex("date"), Qt::Horizontal, tr("Date"));
 
     ui->financeTable->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -286,7 +287,23 @@ void Dashboard::updateAllTasks() {
 
     updateTableView(model, ui->allTasksView, ui->titleTaskLabel, ui->dateTaskLabel, ui->importanceTaskLabel, ui->doneTaskLabel, ui->descriptionTaskLabel);
 
+    // Ustawienie delegata dla kolumny "done" w celu zmiany wyświetlanych wartości
+    QStandardItemModel *standardModel = qobject_cast<QStandardItemModel*>(ui->allTasksView->model());
+    if (standardModel) {
+        QStandardItem *itemYes = new QStandardItem(tr("Yes"));
+        QStandardItem *itemNo = new QStandardItem(tr("No"));
+        QStandardItem *item;
+        for (int row = 0; row < standardModel->rowCount(); ++row) {
+            QModelIndex index = standardModel->index(row, model->fieldIndex("Done"));
+            item = standardModel->itemFromIndex(index);
+            if (item && item->text() == "1")
+                standardModel->setItem(row, model->fieldIndex("Done"), itemYes);
+            else if (item && item->text() == "0")
+                standardModel->setItem(row, model->fieldIndex("Done"), itemNo);
+        }
+    }
 }
+
 
 void Dashboard::updateDayTasks() {
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -339,20 +356,12 @@ void Dashboard::updateTableView(QSqlTableModel *model, QTableView *tableView, QL
                     titleLabel->setText(record.value("title").toString());
                     dateLabel->setText(record.value("date").toString());
                     importanceLabel->setText(record.value("importance").toString());
-                    doneLabel->setText(record.value("done").toBool() ? "Yes" : "No");
+                    bool doneValue = record.value("done").toBool();
+                    qDebug() << "Done value from database:" << doneValue; // Debug
+                    doneLabel->setText(doneValue ? "Yes" : "No");
                     descriptionLabel->setText(record.value("description").toString());
                 }
             });
-
-    for (int row = 0; row < model->rowCount(); ++row) {
-        QModelIndex index = model->index(row, model->fieldIndex("done"));
-        QVariant value = model->data(index);
-        if (value.toBool()) {
-            model->setData(index, "Yes");
-        } else {
-            model->setData(index, "No");
-        }
-    }
 
     int totalWidth = ui->horizontalFrameTasks2->width();
     int titleWidth = totalWidth * 0.4;
@@ -390,7 +399,6 @@ void Dashboard::updateTodayTasks() {
 
     int totalWidth = ui->horizontalFrameTasks3->width(); // Szerokość layoutu
 
-
     int titleWidth = totalWidth * 0.3; // 60% szerokości
     int doneWidth = totalWidth * 0.2;  // 20% szerokości
     int importanceWidth = totalWidth * 0.3;  // 20% szerokości
@@ -405,13 +413,30 @@ void Dashboard::updateTodayTasks() {
     ui->dayTaskView_2->setColumnWidth(model->fieldIndex("done"), doneWidth);
     ui->dayTaskView_2->setColumnWidth(model->fieldIndex("importance"), importanceWidth);
 
-    model->setHeaderData(model->fieldIndex("title"), Qt::Horizontal, tr("Titile"));
+    model->setHeaderData(model->fieldIndex("title"), Qt::Horizontal, tr("Title"));
     model->setHeaderData(model->fieldIndex("done"), Qt::Horizontal, tr("Done"));
     model->setHeaderData(model->fieldIndex("importance"), Qt::Horizontal, tr("Importance"));
+
+    // Ustawienie delegata dla kolumny "done" w celu zmiany wyświetlanych wartości
+    QStandardItemModel *standardModel = qobject_cast<QStandardItemModel*>(ui->dayTaskView_2->model());
+    if (standardModel) {
+        QStandardItem *itemYes = new QStandardItem(tr("Yes"));
+        QStandardItem *itemNo = new QStandardItem(tr("No"));
+        QStandardItem *item;
+        for (int row = 0; row < standardModel->rowCount(); ++row) {
+            QModelIndex index = standardModel->index(row, model->fieldIndex("done"));
+            item = standardModel->itemFromIndex(index);
+            if (item && item->text() == "1")
+                standardModel->setItem(row, model->fieldIndex("done"), itemYes);
+            else if (item && item->text() == "0")
+                standardModel->setItem(row, model->fieldIndex("done"), itemNo);
+        }
+    }
 
     ui->dayTaskView_2->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->dayTaskView_2->setSelectionMode(QAbstractItemView::SingleSelection);
 }
+
 
 void Dashboard::on_dayBox_currentIndexChanged(int index)
 {
@@ -905,11 +930,16 @@ void Dashboard::on_editTaskButton_clicked()
     int row = index.row();
 
     int taskID = ui->allTasksView->model()->data(ui->allTasksView->model()->index(row, 0)).toInt();
-    task *addTask = new task(nullptr, id, 1);
-    connect(addTask, &task::taskAdded, this, &Dashboard::updateAllTasks);
-    connect(addTask, &task::taskAdded, this, &Dashboard::updateDayTasks);
-    connect(addTask, &task::taskAdded, this, &Dashboard::updateTodayTasks);
+    task *addTask = new task(nullptr, id, 1, taskID);
+    connect(addTask, &task::taskUpdated, this, &Dashboard::updateAllTasks);
+    connect(addTask, &task::taskUpdated, this, &Dashboard::updateDayTasks);
+    connect(addTask, &task::taskUpdated, this, &Dashboard::updateTodayTasks);
     addTask->show();
+    ui->titleTaskLabel->setText("Title");
+    ui->dateTaskLabel->setText("Date");
+    ui->importanceTaskLabel->setText("★");
+    ui->doneTaskLabel->setText("✔");
+    ui->descriptionTaskLabel->setText("Desciption");
 }
 
 
@@ -948,3 +978,85 @@ void Dashboard::on_removeTaskButton_clicked()
     ui->doneTaskLabel->setText("✔");
     ui->descriptionTaskLabel->setText("Desciption");
 }
+
+void Dashboard::on_makeAsDoneButton_clicked()
+{
+    QModelIndexList selection = ui->allTasksView->selectionModel()->selectedRows();
+    if (selection.empty()) {
+        QMessageBox::warning(this, "Warning", "Please select row to edit");
+        return;
+    }
+
+    QModelIndex index = selection.at(0);
+    int row = index.row();
+
+    int taskID = ui->allTasksView->model()->data(ui->allTasksView->model()->index(row, 0)).toInt();
+
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("hmdb.db");
+    db.open();
+    QSqlQuery query;
+    query.prepare("SELECT done FROM tasks WHERE taskid = :taskid");
+    query.bindValue(":taskid", taskID);
+    if(query.exec() && query.next())
+    {
+        bool isDone = query.value(0).toBool();
+        if (isDone == 1) return;
+        else if (isDone == 0) {
+            query.prepare("UPDATE tasks SET done = :done WHERE taskid = :taskid");
+            query.bindValue(":taskid", taskID);
+            query.bindValue(":done", true);
+            query.exec();
+        }
+    }
+    updateAllTasks();
+    updateDayTasks();
+    updateTodayTasks();
+    ui->titleTaskLabel->setText("Title");
+    ui->dateTaskLabel->setText("Date");
+    ui->importanceTaskLabel->setText("★");
+    ui->doneTaskLabel->setText("✔");
+    ui->descriptionTaskLabel->setText("Desciption");
+}
+
+
+void Dashboard::on_makeAsUndoneButton_clicked()
+{
+    QModelIndexList selection = ui->allTasksView->selectionModel()->selectedRows();
+    if (selection.empty()) {
+        QMessageBox::warning(this, "Warning", "Please select row to edit");
+        return;
+    }
+
+    QModelIndex index = selection.at(0);
+    int row = index.row();
+
+    int taskID = ui->allTasksView->model()->data(ui->allTasksView->model()->index(row, 0)).toInt();
+
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("hmdb.db");
+    db.open();
+    QSqlQuery query;
+    query.prepare("SELECT done FROM tasks WHERE taskid = :taskid");
+    query.bindValue(":taskid", taskID);
+    if(query.exec() && query.next())
+    {
+        bool isDone = query.value(0).toBool();
+        if (isDone == 0) return;
+        else if (isDone == 1) {
+            query.prepare("UPDATE tasks SET done = :done WHERE taskid = :taskid");
+            query.bindValue(":taskid", taskID);
+            query.bindValue(":done", false);
+            query.exec();
+        }
+    }
+    updateAllTasks();
+    updateDayTasks();
+    updateTodayTasks();
+    ui->titleTaskLabel->setText("Title");
+    ui->dateTaskLabel->setText("Date");
+    ui->importanceTaskLabel->setText("★");
+    ui->doneTaskLabel->setText("✔");
+    ui->descriptionTaskLabel->setText("Desciption");
+}
+

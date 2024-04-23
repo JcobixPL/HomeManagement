@@ -10,8 +10,8 @@ task::task(QWidget *parent, int userID, int pageID, int taskID)
     this->setWindowIcon(QIcon(":/Resources/icon.ico"));
     id = userID;
     taskid = taskID;
-    ui->stackedWidget->setCurrentIndex(pageID);
     if (pageID == 1) setParametersToEdit(taskID);
+    ui->stackedWidget->setCurrentIndex(pageID);
     ui->dateEdit_3->setDate(QDate::currentDate());
 }
 
@@ -21,11 +21,14 @@ task::~task()
 }
 
 void task::setParametersToEdit(int taskID) {
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("hmdb.db");
+    db.open();
     QSqlQuery query;
     query.prepare("SELECT title, date, done, importance, description FROM tasks WHERE taskid = :taskid");
     query.bindValue(":taskid", taskID);
     if (query.exec() && query.next()) {
-        if (query.value(2).toString() == "No") ui->doneComboBox_2->setCurrentIndex(0);
+        if (query.value(2).toBool() == false) ui->doneComboBox_2->setCurrentIndex(0);
         else ui->doneComboBox_2->setCurrentIndex(1);
         if (query.value(3).toInt() == 1) ui->importanceSpinBox_2->setValue(1);
         else if (query.value(3).toInt() == 2) ui->importanceSpinBox_2->setValue(2);
@@ -43,6 +46,7 @@ void task::on_confirmTaskButton_clicked()
     importance = ui->importanceSpinBox->value();
     description = ui->descriptionLineEdit->text();
     done = ui->doneComboBox->currentText();
+    bool isDone = (done == "Yes") ? 1 : 0;
 
     if (title.isEmpty() || description.isEmpty()) {
         QMessageBox::warning(this, "Błąd", "All fields must be completed");
@@ -58,7 +62,7 @@ void task::on_confirmTaskButton_clicked()
     query.bindValue(":userid", id);
     query.bindValue(":title", title);
     query.bindValue(":date", date);
-    query.bindValue(":done", done);
+    query.bindValue(":done", isDone);
     query.bindValue(":importance", importance);
     query.bindValue(":description", description);
     query.exec();
@@ -69,23 +73,27 @@ void task::on_confirmTaskButton_clicked()
 
 void task::on_confirmTaskButton_2_clicked()
 {
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("hmdb.db");
+    db.open();
     title = ui->titleLineEdit_5->text();
     date = ui->dateEdit_4->date();
     importance = ui->importanceSpinBox_2->value();
     done = ui->doneComboBox_2->currentText();
     description = ui->descriptionLineEdit_2->text();
+    bool isDone = (done == "Yes") ? 1 : 0;
 
     if (title.isEmpty() || description.isEmpty()) {
         QMessageBox::warning(this, "Błąd", "All fields must be completed");
         return;
     }
-
+    qDebug() << "taskid = " << taskid;
+    qDebug() << "userid = " << id;
     QSqlQuery query;
-    query.prepare("UPDATE tasks SET userid = :userid, title = :title, date = :date, importane = :importance, done = :done, description = :description WHERE taskid = :taskid");
-    query.bindValue(":userid", id);
+    query.prepare("UPDATE tasks SET title = :title, date = :date, importance = :importance, done = :done, description = :description WHERE taskid = :taskid");
     query.bindValue(":title", title);
     query.bindValue(":date", date);
-    query.bindValue(":done", done);
+    query.bindValue(":done", isDone);
     query.bindValue(":importance", importance);
     query.bindValue(":description", description);
     query.bindValue(":taskid", taskid);

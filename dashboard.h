@@ -101,6 +101,10 @@ private slots:
 
     void on_removeTaskButton_clicked();
 
+    void on_makeAsDoneButton_clicked();
+
+    void on_makeAsUndoneButton_clicked();
+
 private:
     Ui::Dashboard *ui;
 
