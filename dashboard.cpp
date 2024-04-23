@@ -287,6 +287,8 @@ void Dashboard::updateTable() {
     db.open();
     QSqlTableModel *model = new QSqlTableModel(this, db);
     model->setTable("finances");
+    QString filter = QString("userid = %1").arg(id);
+    model->setFilter(filter);
     model->select();
 
     ui->financeTable->setModel(model);
@@ -309,6 +311,9 @@ void Dashboard::updateAllTasks() {
 
     QSqlTableModel *model = new QSqlTableModel(this, db);
     model->setTable("tasks");
+    QString filter = QString("userid = %1").arg(id);
+    model->setFilter(filter);
+    model->select();
 
     updateTableView(model, ui->allTasksView, ui->titleTaskLabel, ui->dateTaskLabel, ui->importanceTaskLabel, ui->doneTaskLabel, ui->descriptionTaskLabel);
 
@@ -325,9 +330,8 @@ void Dashboard::updateAllTasks() {
             else if (item && item->text() == "0")
                 standardModel->setItem(row, model->fieldIndex("Done"), itemNo);
         }
-    }//TO DO CHECK
+    }
 }
-
 
 void Dashboard::updateDayTasks() {
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -337,8 +341,11 @@ void Dashboard::updateDayTasks() {
     QSqlTableModel *model = new QSqlTableModel(this, db);
     model->setTable("tasks");
 
+    QString filter = QString("userid = %1").arg(id);
+    model->setFilter(filter);
+    model->select();
     QDate today = QDate::currentDate();
-    QString queryStr; \
+    QString queryStr;
 
     if (ui->dayBox->currentIndex() == 0) { // Yesterday
         QDate yesterday = today.addDays(-1);
@@ -409,6 +416,9 @@ void Dashboard::updateTodayTasks() {
     QSqlTableModel *model = new QSqlTableModel(this, db);
     model->setTable("tasks");
 
+    QString filter = QString("userid = %1").arg(id);
+    model->setFilter(filter);
+    model->select();
     QDate today = QDate::currentDate();
     QString queryStr;
 
@@ -759,7 +769,7 @@ void Dashboard::createLineChart() {
     chart->addAxis(axisY, Qt::AlignLeft);
     incomeSeries->attachAxis(axisY);
     expenseSeries->attachAxis(axisY);
-
+    chart->setTitle("Comparison of Incomes and Expenses in last 6 months");
     QChartView *chartView = new QChartView(chart);
     ui->chartFrame_2->layout()->addWidget(chartView);
 }

@@ -53,7 +53,7 @@ void signUp::on_signUpButton_clicked()
         return;
     }
 
-    QRegularExpression passwordRegex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+    QRegularExpression passwordRegex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!.,@#%&()_-]{8,}$");
     if (!passwordRegex.match(password1).hasMatch()) {
         QMessageBox::warning(this, "Warning", "Password must have at least 8 characters, lowercase and uppercase letters and numbers");
         return;
