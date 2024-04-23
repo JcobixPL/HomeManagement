@@ -19,6 +19,7 @@ signals:
 
 public:
     QSqlDatabase db;
+    QSqlQuery query;
     explicit account(QWidget *parent = nullptr, int id = -1);
     ~account();
 
@@ -28,6 +29,7 @@ private slots:
 private:
     Ui::account *ui;
     int userid;
+
 };
 
 #endif // ACCOUNT_H

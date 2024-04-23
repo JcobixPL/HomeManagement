@@ -10,10 +10,12 @@ Dashboard::Dashboard(QWidget *parent, int userID)
     : QDialog(parent)
     , ui(new Ui::Dashboard)
 {
+    setFixedSize(1047, 657);
     id = userID;
     ui->setupUi(this);
     this->setWindowTitle("Home Management");
     this->setWindowIcon(QIcon(":/Resources/icon.ico"));
+    this->setWindowFlags(this->windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Dashboard::updateTime);
     timer->start(1000);
@@ -240,18 +242,41 @@ void Dashboard::on_editAccountButton_clicked()
         userid = query.value(0).toInt();
     }
     account *editAccount = new account(nullptr, userid);
-    connect(editAccount, &account::updateAccount, this, &Dashboard::updateBudget); // Dodaj to połączenie
-    connect(editAccount, &account::updateAccount, this, &Dashboard::updatePieChart); // Dodaj to połączenie
+    connect(editAccount, &account::updateAccount, this, &Dashboard::updateBudget);
+    connect(editAccount, &account::updateAccount, this, &Dashboard::updatePieChart);
     connect(editAccount, &account::updateAccount, this, &Dashboard::updateLineChart);
+    connect(editAccount, &account::updateAccount, this, &Dashboard::updateUserInfo);
     editAccount->show();
+}
+
+void Dashboard::updateUserInfo(int userID) {
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("hmdb.db");
+    db.open();
+    QSqlQuery query;
+    query.prepare("SELECT username, email, password FROM users WHERE userid = :userid");
+    query.bindValue(":userid", userID);
+    if (query.exec() && query.next()) {
+        username = query.value(0).toString();
+        email = query.value(1).toString();
+        password = query.value(2).toString();
+    }
+    ui->welcomeLabel->setText("Welcome " + username + "!");
+    ui->welcomeLabel_3->setText("Welcome " + username + "!");
+    ui->welcomeLabel_2->setText("Welcome " + username + "!");
+    ui->welcomeLabel_4->setText("Welcome " + username + "!");
+
+    ui->usernameLabel_2->setText(username);
+    ui->emailLabel_6->setText(email);
+    ui->passwordLabel_2->setText("**********");
 }
 
 void Dashboard::on_addFinanceButton_clicked()
 {
     addFinance *addFinance = new class addFinance(nullptr, id, 0);
-    connect(addFinance, &addFinance::transactionAdded, this, &Dashboard::updateTable); // Połączenie sygnału z slotem
-    connect(addFinance, &addFinance::transactionAdded, this, &Dashboard::updateFinances); // Dodaj to połączenie
-    connect(addFinance, &addFinance::transactionAdded, this, &Dashboard::updatePieChart); // Dodaj to połączenie
+    connect(addFinance, &addFinance::transactionAdded, this, &Dashboard::updateTable);
+    connect(addFinance, &addFinance::transactionAdded, this, &Dashboard::updateFinances);
+    connect(addFinance, &addFinance::transactionAdded, this, &Dashboard::updatePieChart);
     connect(addFinance, &addFinance::transactionAdded, this, &Dashboard::updateLineChart);
     addFinance->show();
 }
@@ -264,7 +289,7 @@ void Dashboard::updateTable() {
     model->setTable("finances");
     model->select();
 
-    ui->financeTable->setModel(model);  // Ustawienie modelu dla QTableView
+    ui->financeTable->setModel(model);
     model->setHeaderData(model->fieldIndex("type"), Qt::Horizontal, tr("Type"));
     model->setHeaderData(model->fieldIndex("title"), Qt::Horizontal, tr("Title"));
     model->setHeaderData(model->fieldIndex("amount"), Qt::Horizontal, tr("Amount"));
@@ -287,7 +312,6 @@ void Dashboard::updateAllTasks() {
 
     updateTableView(model, ui->allTasksView, ui->titleTaskLabel, ui->dateTaskLabel, ui->importanceTaskLabel, ui->doneTaskLabel, ui->descriptionTaskLabel);
 
-    // Ustawienie delegata dla kolumny "done" w celu zmiany wyświetlanych wartości
     QStandardItemModel *standardModel = qobject_cast<QStandardItemModel*>(ui->allTasksView->model());
     if (standardModel) {
         QStandardItem *itemYes = new QStandardItem(tr("Yes"));
@@ -301,7 +325,7 @@ void Dashboard::updateAllTasks() {
             else if (item && item->text() == "0")
                 standardModel->setItem(row, model->fieldIndex("Done"), itemNo);
         }
-    }
+    }//TO DO CHECK
 }
 
 
@@ -314,16 +338,16 @@ void Dashboard::updateDayTasks() {
     model->setTable("tasks");
 
     QDate today = QDate::currentDate();
-    QString queryStr; // Inicjalizacja zmiennej na zapytanie SQL
+    QString queryStr; \
 
-    if (ui->dayBox->currentIndex() == 0) { // Wczoraj
+    if (ui->dayBox->currentIndex() == 0) { // Yesterday
         QDate yesterday = today.addDays(-1);
         QString yesterdayStr = yesterday.toString("yyyy-MM-dd");
         queryStr = QString("date = '%1'").arg(yesterdayStr);
-    } else if (ui->dayBox->currentIndex() == 1) { // Dzisiaj
+    } else if (ui->dayBox->currentIndex() == 1) { // Today
         QString todayStr = today.toString("yyyy-MM-dd");
         queryStr = QString("date = '%1'").arg(todayStr);
-    } else if (ui->dayBox->currentIndex() == 2) { // Jutro
+    } else if (ui->dayBox->currentIndex() == 2) { // Tommorow
         QDate tomorrow = today.addDays(1);
         QString tomorrowStr = tomorrow.toString("yyyy-MM-dd");
         queryStr = QString("date = '%1'").arg(tomorrowStr);
@@ -392,18 +416,16 @@ void Dashboard::updateTodayTasks() {
     queryStr = QString("date = '%1'").arg(todayStr);
     model->setFilter(queryStr);
 
-    // Sortowanie według kolumny "done"
     model->setSort(model->fieldIndex("done"), Qt::AscendingOrder);
 
     model->select();
 
-    int totalWidth = ui->horizontalFrameTasks3->width(); // Szerokość layoutu
+    int totalWidth = ui->horizontalFrameTasks3->width();
 
-    int titleWidth = totalWidth * 0.3; // 60% szerokości
-    int doneWidth = totalWidth * 0.2;  // 20% szerokości
-    int importanceWidth = totalWidth * 0.3;  // 20% szerokości
+    int titleWidth = totalWidth * 0.3;
+    int doneWidth = totalWidth * 0.2;
+    int importanceWidth = totalWidth * 0.3;
 
-    // Wyświetlenie tylko wybranych kolumn
     ui->dayTaskView_2->setModel(model);
     ui->dayTaskView_2->setColumnHidden(model->fieldIndex("taskid"), true);
     ui->dayTaskView_2->setColumnHidden(model->fieldIndex("userid"), true);
@@ -417,7 +439,6 @@ void Dashboard::updateTodayTasks() {
     model->setHeaderData(model->fieldIndex("done"), Qt::Horizontal, tr("Done"));
     model->setHeaderData(model->fieldIndex("importance"), Qt::Horizontal, tr("Importance"));
 
-    // Ustawienie delegata dla kolumny "done" w celu zmiany wyświetlanych wartości
     QStandardItemModel *standardModel = qobject_cast<QStandardItemModel*>(ui->dayTaskView_2->model());
     if (standardModel) {
         QStandardItem *itemYes = new QStandardItem(tr("Yes"));
@@ -445,28 +466,31 @@ void Dashboard::on_dayBox_currentIndexChanged(int index)
 
 void Dashboard::on_passwordCheckBox_clicked()
 {
-    qDebug() << ui->passwordCheckBox->isChecked();
+    db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setDatabaseName("hmdb.db");
+    db.open();
+    QSqlQuery query;
+    query.prepare("SELECT password FROM users WHERE userid = :userid");
+    query.bindValue(":userid", id);
+    if (query.exec() && query.next()) {
+        password = query.value(0).toString();
+    }
     if(ui->passwordCheckBox->isChecked()) ui->passwordLabel_2->setText(password);
     else ui->passwordLabel_2->setText("**********");
 }
 
 void Dashboard::createPieChart() {
     QPieSeries *series = new QPieSeries();
-    series->append("Incomes", incomes)->setBrush(Qt::green); // Ustawienie koloru dla danych "Incomes" na zielony
-    series->append("Expenses", expenses)->setBrush(Qt::red); // Ustawienie koloru dla danych "Expenses" na czerwony
+    series->append("Incomes", incomes)->setBrush(Qt::green);
+    series->append("Expenses", expenses)->setBrush(Qt::red);
 
-    // Tworzenie wykresu i dodawanie do niego serii danych
     QChart *chart = new QChart();
     chart->addSeries(series);
 
-    chart->legend()->setColor(Qt::white); //TODO
-    //chart->setTitle("Comparison of Incomes and Expenses");
-    // Tworzenie widoku wykresu i dodawanie do interfejsu użytkownika
+    chart->legend()->setColor(Qt::white);
+    chart->setTitle("Comparison of Incomes and Expenses");
     QChartView *chartView = new QChartView(chart);
-    ui->chartFrame->layout()->addWidget(chartView); // Założenie, że centralWidget posiada układ (layout)
-
-    // Opcjonalnie: Ustawienia dodatkowe wykresu
-    //chart->setTitleFont(QFont("Arial", 14));
+    ui->chartFrame->layout()->addWidget(chartView);
     chart->setBackgroundRoundness(0);
     chart->setBackgroundBrush(Qt::NoBrush);
 }
@@ -488,8 +512,8 @@ void Dashboard::updateFinances(int id) {
     }
 
     query.prepare("UPDATE users SET budget = :budget WHERE userid = :userid");
-    query.bindValue(":budget", budget);  // Ustawienie nowej wartości budżetu
-    query.bindValue(":userid", id);  // Ustawienie ID użytkownika
+    query.bindValue(":budget", budget);
+    query.bindValue(":userid", id);
     query.exec();
 
     query.prepare("SELECT budget FROM users WHERE userid = :userid");
@@ -590,8 +614,8 @@ void Dashboard::updateEditedFinances(int id, int financeID) {
     }
     qDebug() << budget;
     query.prepare("UPDATE users SET budget = :budget WHERE userid = :userid");
-    query.bindValue(":budget", budget);  // Ustawienie nowej wartości budżetu
-    query.bindValue(":userid", id);  // Ustawienie ID użytkownika
+    query.bindValue(":budget", budget);
+    query.bindValue(":userid", id);
     query.exec();
 
     query.prepare("SELECT budget FROM users WHERE userid = :userid");
@@ -669,7 +693,6 @@ void Dashboard::updateRemoveFinances(int id) {
 }
 
 void Dashboard::updatePieChart() {
-    // Pobierz istniejący wykres
     QChartView *chartView = qobject_cast<QChartView*>(ui->chartFrame->layout()->itemAt(0)->widget());
     if (!chartView) {
         qDebug() << "Chart view not found!";
@@ -681,7 +704,6 @@ void Dashboard::updatePieChart() {
         return;
     }
 
-    // Aktualizuj wartości serii danych
     QPieSeries *series = dynamic_cast<QPieSeries*>(chart->series().at(0));
     if (series) {
         series->clear();
@@ -700,53 +722,44 @@ void Dashboard::createLineChart() {
     QVector<double> incomeSums = getTransactionSumsByType("Income", id);
     QVector<double> expenseSums = getTransactionSumsByType("Expense", id);
 
-    // Utworzenie serii danych dla przychodów
     QLineSeries *incomeSeries = new QLineSeries();
     incomeSeries->setName("Incomes");
     for (int i = 0; i < months.size(); i++) {
         incomeSeries->append(i, incomeSums[i]);
     }
 
-    // Utworzenie serii danych dla wydatków
     QLineSeries *expenseSeries = new QLineSeries();
     expenseSeries->setName("Expenses");
     for (int i = 0; i < months.size(); i++) {
         expenseSeries->append(i, expenseSums[i]);
     }
 
-    // Usunięcie istniejących danych z wykresu
     QChart *chart = new QChart();
     chart->removeAllSeries();
 
-    // Dodanie nowych danych do wykresu
     chart->addSeries(incomeSeries);
     chart->addSeries(expenseSeries);
 
-    // Tworzenie osi X (oś pozioma)
     QBarCategoryAxis *axisX = new QBarCategoryAxis();
     axisX->append(months);
     chart->addAxis(axisX, Qt::AlignBottom);
     incomeSeries->attachAxis(axisX);
     expenseSeries->attachAxis(axisX);
 
-    // Tworzenie osi Y (oś pionowa)
     QValueAxis *axisY = new QValueAxis();
     axisY->setTitleText("Amount");
 
-    // Znajdowanie wartości maksymalnej i minimalnej
     double max = qMax(*std::max_element(incomeSums.constBegin(), incomeSums.constEnd()),
                       *std::max_element(expenseSums.constBegin(), expenseSums.constEnd()));
     double min = qMin(*std::min_element(incomeSums.constBegin(), incomeSums.constEnd()),
                       *std::min_element(expenseSums.constBegin(), expenseSums.constEnd()));
 
-    // Automatyczne skalowanie osi Y
     axisY->setRange(min * 0.9, max * 1.1);
 
     chart->addAxis(axisY, Qt::AlignLeft);
     incomeSeries->attachAxis(axisY);
     expenseSeries->attachAxis(axisY);
 
-    // Tworzenie widoku wykresu i dodawanie do interfejsu użytkownika
     QChartView *chartView = new QChartView(chart);
     ui->chartFrame_2->layout()->addWidget(chartView);
 }
@@ -756,21 +769,18 @@ void Dashboard::updateLineChart() {
     QVector<double> incomeSums = getTransactionSumsByType("Income", id);
     QVector<double> expenseSums = getTransactionSumsByType("Expense", id);
 
-    // Pobranie referencji do istniejącego wykresu
     QChartView *chartView = qobject_cast<QChartView*>(ui->chartFrame_2->layout()->itemAt(0)->widget());
     if (!chartView) {
         qDebug() << "Chart view not found.";
         return;
     }
 
-    // Pobranie referencji do istniejącego wykresu
     QChart *chart = chartView->chart();
     if (!chart) {
         qDebug() << "Chart not found.";
         return;
     }
 
-    // Pobranie serii danych z istniejącego wykresu
     QList<QAbstractSeries*> seriesList = chart->series();
     if (seriesList.size() < 2) {
         qDebug() << "Not enough series found.";
@@ -785,13 +795,11 @@ void Dashboard::updateLineChart() {
         return;
     }
 
-    // Aktualizacja danych serii dla przychodów
     incomeSeries->clear();
     for (int i = 0; i < months.size(); i++) {
         incomeSeries->append(i, incomeSums[i]);
     }
 
-    // Aktualizacja danych serii dla wydatków
     expenseSeries->clear();
     for (int i = 0; i < months.size(); i++) {
         expenseSeries->append(i, expenseSums[i]);
@@ -867,7 +875,7 @@ void Dashboard::on_editFinanceButton_clicked()
         oldAmount = query.value(1).toFloat();
     }
     addFinance *addFinance = new class addFinance(nullptr, id, 1, financeID);
-    connect(addFinance, &addFinance::transactionUpdated, this, &Dashboard::updateTable); // Połączenie sygnału z slotem
+    connect(addFinance, &addFinance::transactionUpdated, this, &Dashboard::updateTable);
     connect(addFinance, &addFinance::transactionUpdated, this, &Dashboard::updateEditedFinances);
     connect(addFinance, &addFinance::transactionUpdated, this, &Dashboard::updatePieChart);
     connect(addFinance, &addFinance::transactionUpdated, this, &Dashboard::updateLineChart);

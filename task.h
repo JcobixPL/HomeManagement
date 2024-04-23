@@ -24,6 +24,7 @@ signals:
 
 public:
     QSqlDatabase db;
+    QSqlQuery query;
     explicit task(QWidget *parent = nullptr, int userID = -1, int pageID = 0, int taskid = -1);
     ~task();
 

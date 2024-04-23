@@ -8,6 +8,7 @@ addFinance::addFinance(QWidget *parent, int userID, int pageID, int financeID)
     ui->setupUi(this);
     this->setWindowTitle("Home Management");
     this->setWindowIcon(QIcon(":/Resources/icon.ico"));
+    this->setWindowFlags(this->windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
     id = userID;
     financeid = financeID;
     ui->stackedWidget->setCurrentIndex(pageID);
@@ -44,14 +45,13 @@ void addFinance::on_confirmButton_clicked()
     category = ui->categoryLineEdit->text();
 
     if (amount == 0 || title.isEmpty() || category.isEmpty()) {
-        QMessageBox::warning(this, "Błąd", "Wszystkie pola muszą być wypełnione");
+        QMessageBox::warning(this, "Warning", "All fields need to be filled in");
         return;
     }
 
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("hmdb.db");
     db.open();
-    // Przygotowanie zapytania SQL
     QSqlQuery query;
     query.prepare("INSERT INTO finances (userid, type, amount, title, date, category) VALUES (:userid, :type, :amount, :title, :date, :category)");
     query.bindValue(":userid", id);
@@ -61,7 +61,6 @@ void addFinance::on_confirmButton_clicked()
     query.bindValue(":date", date);
     query.bindValue(":category", category);
     query.exec();
-    // Zamknięcie połączenia z bazą danych
     db.close();
     emit transactionAdded(id);
     this->close();
@@ -76,7 +75,7 @@ void addFinance::on_confirmButton_3_clicked()
     category = ui->categoryLineEdit_3->text();
 
     if (amount == 0 || title.isEmpty() || category.isEmpty()) {
-        QMessageBox::warning(this, "Błąd", "Wszystkie pola muszą być wypełnione");
+        QMessageBox::warning(this, "Warning", "All fields need to be filled in");
         return;
     }
     db = QSqlDatabase::addDatabase("QSQLITE");

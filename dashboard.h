@@ -28,8 +28,10 @@ class Dashboard : public QDialog
 
 public:
     QSqlDatabase db;
+    QSqlQuery query;
     explicit Dashboard(QWidget *parent = nullptr, int userID = -1);
     ~Dashboard();
+    void updateUserInfo(int userID);
     void updateTable();
     void updateAllTasks();
     void updateDayTasks();

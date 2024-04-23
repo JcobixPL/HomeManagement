@@ -8,6 +8,7 @@ task::task(QWidget *parent, int userID, int pageID, int taskID)
     ui->setupUi(this);
     this->setWindowTitle("Home Management");
     this->setWindowIcon(QIcon(":/Resources/icon.ico"));
+    this->setWindowFlags(this->windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
     id = userID;
     taskid = taskID;
     if (pageID == 1) setParametersToEdit(taskID);
@@ -49,7 +50,7 @@ void task::on_confirmTaskButton_clicked()
     bool isDone = (done == "Yes") ? 1 : 0;
 
     if (title.isEmpty() || description.isEmpty()) {
-        QMessageBox::warning(this, "Błąd", "All fields must be completed");
+        QMessageBox::warning(this, "Błąd", "All fields need to be filled in");
         return;
     }
 
@@ -84,7 +85,7 @@ void task::on_confirmTaskButton_2_clicked()
     bool isDone = (done == "Yes") ? 1 : 0;
 
     if (title.isEmpty() || description.isEmpty()) {
-        QMessageBox::warning(this, "Błąd", "All fields must be completed");
+        QMessageBox::warning(this, "Błąd", "All fields need to be filled in");
         return;
     }
     qDebug() << "taskid = " << taskid;

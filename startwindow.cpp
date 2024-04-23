@@ -41,7 +41,7 @@ void StartWindow::on_logInButton_clicked()
         dashboardWindow->show();
     }
     else {
-        QMessageBox::information(this, "Logowanie", "Błędna nazwa użytkownika lub hasło!");
+        QMessageBox::information(this, "Log in", "Incorrect username or password");
     }
     db.close();
 }

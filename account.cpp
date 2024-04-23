@@ -9,6 +9,7 @@ account::account(QWidget *parent, int id)
     ui->setupUi(this);
     this->setWindowTitle("Home Management");
     this->setWindowIcon(QIcon(":/Resources/icon.ico"));
+    this->setWindowFlags(this->windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
 
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("hmdb.db");
@@ -38,42 +39,37 @@ void account::on_confrimButton_clicked()
     QString email = ui->emailLineEdit->text();
     float budget = ui->budgetSpinBox->value();
 
-    // Sprawdzenie, czy wszystkie pola są wypełnione
     if (username.isEmpty() || password1.isEmpty() || password2.isEmpty() || email.isEmpty()) {
-        QMessageBox::warning(this, "Błąd", "Wszystkie pola muszą być wypełnione");
+        QMessageBox::warning(this, "Warning", "All fields need to be filled in");
         return;
     }
 
-    // Sprawdzenie, czy oba hasła się zgadzają
     if (password1 != password2) {
-        QMessageBox::warning(this, "Błąd", "Podane hasła nie są identyczne");
+        QMessageBox::warning(this, "Warning", "Both given passwords don't match each other");
         return;
     }
 
-    // Sprawdzenie warunków dla hasła
     QRegularExpression passwordRegex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
     if (!passwordRegex.match(password1).hasMatch()) {
-        QMessageBox::warning(this, "Błąd", "Hasło musi mieć przynajmniej 1 dużą literę, 1 cyfrę i minimum 8 znaków");
+        QMessageBox::warning(this, "Warning", "Password must have at least 8 characters, lowercase and uppercase letters and numbers");
         return;
     }
 
-    // Sprawdzenie warunków dla adresu email
     QRegularExpression emailRegex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
     if (!emailRegex.match(email).hasMatch()) {
-        QMessageBox::warning(this, "Błąd", "Nieprawidłowy adres email");
+        QMessageBox::warning(this, "Warning", "Incorrect email address");
         return;
     }
 
     db.open();
 
-    // Sprawdzenie, czy użytkownik o podanej nazwie użytkownika lub emailu już istnieje
     QSqlQuery checkQuery;
     checkQuery.prepare("SELECT * FROM users WHERE userid != :userid AND (username = :username OR email = :email");
     checkQuery.bindValue(":username", username);
     checkQuery.bindValue(":email", email);
     checkQuery.bindValue(":userid", userid);
     if (checkQuery.exec() && checkQuery.next()) {
-        QMessageBox::warning(this, "Błąd", "Użytkownik o podanej nazwie użytkownika lub emailu już istnieje");
+        QMessageBox::warning(this, "Warning", "User with given username or email already exists in database");
         db.close();
         return;
     }

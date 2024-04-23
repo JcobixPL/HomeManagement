@@ -18,6 +18,7 @@ class StartWindow : public QMainWindow
 
 public:
     QSqlDatabase db;
+    QSqlQuery query;
     StartWindow(QWidget *parent = nullptr);
     ~StartWindow();
 

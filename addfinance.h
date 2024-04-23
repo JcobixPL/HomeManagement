@@ -24,6 +24,7 @@ signals:
 
 public:
     QSqlDatabase db;
+    QSqlQuery query;
     explicit addFinance(QWidget *parent = nullptr, int userID = -1, int pageID = 0, int financeid = -1);
     ~addFinance();
 

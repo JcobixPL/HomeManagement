@@ -16,6 +16,7 @@ class signUp : public QDialog
 
 public:
     QSqlDatabase db;
+    QSqlQuery query;
     explicit signUp(QWidget *parent = nullptr);
     ~signUp();
 
