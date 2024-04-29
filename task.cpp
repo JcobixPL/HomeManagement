@@ -50,7 +50,7 @@ void task::on_confirmTaskButton_clicked()
     bool isDone = (done == "Yes") ? 1 : 0;
 
     if (title.isEmpty() || description.isEmpty()) {
-        QMessageBox::warning(this, "Błąd", "All fields need to be filled in");
+        QMessageBox::warning(this, "Warning", "All fields need to be filled in");
         return;
     }
 
@@ -85,7 +85,7 @@ void task::on_confirmTaskButton_2_clicked()
     bool isDone = (done == "Yes") ? 1 : 0;
 
     if (title.isEmpty() || description.isEmpty()) {
-        QMessageBox::warning(this, "Błąd", "All fields need to be filled in");
+        QMessageBox::warning(this, "Warning", "All fields need to be filled in");
         return;
     }
     qDebug() << "taskid = " << taskid;

@@ -10,16 +10,18 @@ Dashboard::Dashboard(QWidget *parent, int userID)
     : QDialog(parent)
     , ui(new Ui::Dashboard)
 {
-    setFixedSize(1047, 657);
     id = userID;
     ui->setupUi(this);
     this->setWindowTitle("Home Management");
     this->setWindowIcon(QIcon(":/Resources/icon.ico"));
     this->setWindowFlags(this->windowFlags() | Qt::MSWindowsFixedSizeDialogHint);
+
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Dashboard::updateTime);
     timer->start(1000);
     updateTime();
+
+
     ui->stackedWidget->setCurrentIndex(0);
 
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -229,7 +231,6 @@ void Dashboard::on_deleteAccountButton_clicked()
     }
 }
 
-
 void Dashboard::on_editAccountButton_clicked()
 {
     db = QSqlDatabase::addDatabase("QSQLITE");
@@ -340,7 +341,6 @@ void Dashboard::updateDayTasks() {
 
     QSqlTableModel *model = new QSqlTableModel(this, db);
     model->setTable("tasks");
-
     QString filter = QString("userid = %1").arg(id);
     model->setFilter(filter);
     model->select();
@@ -388,7 +388,6 @@ void Dashboard::updateTableView(QSqlTableModel *model, QTableView *tableView, QL
                     dateLabel->setText(record.value("date").toString());
                     importanceLabel->setText(record.value("importance").toString());
                     bool doneValue = record.value("done").toBool();
-                    qDebug() << "Done value from database:" << doneValue; // Debug
                     doneLabel->setText(doneValue ? "Yes" : "No");
                     descriptionLabel->setText(record.value("description").toString());
                 }
@@ -406,19 +405,16 @@ void Dashboard::updateTableView(QSqlTableModel *model, QTableView *tableView, QL
     tableView->setColumnWidth(model->fieldIndex("done"), narrowWidth);
 }
 
-
-
 void Dashboard::updateTodayTasks() {
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("hmdb.db");
     db.open();
-
     QSqlTableModel *model = new QSqlTableModel(this, db);
     model->setTable("tasks");
-
     QString filter = QString("userid = %1").arg(id);
     model->setFilter(filter);
     model->select();
+
     QDate today = QDate::currentDate();
     QString queryStr;
 
@@ -717,7 +713,7 @@ void Dashboard::updatePieChart() {
     QPieSeries *series = dynamic_cast<QPieSeries*>(chart->series().at(0));
     if (series) {
         series->clear();
-        series->append("Incomes", incomes)->setBrush(Qt::green); // Ustawienie koloru dla danych "Incomes" na zielony
+        series->append("Incomes", incomes)->setBrush(Qt::green);
         series->append("Expenses", expenses)->setBrush(Qt::red);
     } else {
         qDebug() << "Series not found!";

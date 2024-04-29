@@ -16,6 +16,7 @@ signUp::signUp(QWidget *parent)
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("hmdb.db");
 
+    //połączenie entera z przyciskiem
     connect(ui->usernameLineEdit, &QLineEdit::returnPressed, this, &signUp::on_signUpButton_clicked);
     connect(ui->passwordLineEdit1, &QLineEdit::returnPressed, this, &signUp::on_signUpButton_clicked);
     connect(ui->passwordLineEdit2, &QLineEdit::returnPressed, this, &signUp::on_signUpButton_clicked);
@@ -86,9 +87,9 @@ void signUp::on_signUpButton_clicked()
     query.bindValue(":budget", budget);
 
     if (query.exec()) {
-        QMessageBox::information(this, "Sukces", "Rejestracja udana. Możesz się zalogować.");
+        QMessageBox::information(this, "Success", "Registration completed! You can log in now.");
     } else {
-        QMessageBox::critical(this, "Błąd", "Wystąpił problem podczas dodawania użytkownika do bazy danych");
+        QMessageBox::critical(this, "Warning", "There was a mistake during addind your account to the database");
     }
 
     db.close();
